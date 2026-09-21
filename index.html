@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Electronics Component Guide – Sensors, Modules and Parts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Sensors, modules and parts, explained and wired</h1>
+      <p class="lead">Thirty components you will meet in embedded and IoT projects. Each has a short explanation, key specs, a pin table, safety notes and a sketch you can copy. Start at the top and work down.</p>
+      <div class="stats">
+        <span><b id="statItems">30</b>components</span>
+        <span><b id="statCats">7</b>groups</span>
+        <span><b id="statCode">0</b>code sketches</span>
+              <button class="ghost" id="toggleAll" type="button">Expand all</button>
+
+      </div>
+    </div>
+    <svg class="trace-art" viewBox="0 0 460 300" aria-hidden="true">
+      <path class="trace" pathLength="1" d="M10 60 H120 V110 H180"/>
+      <path class="trace t2" pathLength="1" d="M10 150 H90 V180 H180"/>
+      <path class="trace t3" pathLength="1" d="M10 240 H150 V210 H180"/>
+      <path class="trace" pathLength="1" d="M280 110 H340 V50 H450"/>
+      <path class="trace t2" pathLength="1" d="M280 150 H450"/>
+      <path class="trace t3" pathLength="1" d="M280 190 H350 V250 H450"/>
+      <rect class="chip-body" x="180" y="90" width="100" height="120" rx="5"/>
+      <circle cx="196" cy="106" r="4" fill="#7fc4ff"/>
+      <text class="chip-text" x="205" y="155">Arduino</text>
+      <text class="chip-text" x="205" y="172">UNO</text>
+      <circle class="pad" cx="10" cy="60" r="6"/><circle class="pad" cx="10" cy="150" r="6"/><circle class="pad" cx="10" cy="240" r="6"/>
+      <circle class="pad" cx="450" cy="50" r="6"/><circle class="pad" cx="450" cy="150" r="6"/><circle class="pad" cx="450" cy="250" r="6"/>
+    </svg>
+  </div>
+</header>
+
+<div class="nav" style="display: none;">
+  <div class="wrap">
+    <div class="tools">
+      <input class="" id="search" type="search" placeholder="Search a part or word, e.g. servo, GPS, 3.3V" aria-label="Search components" 
+      <button class="ghost" id="toggleAll" type="button">Expand all</button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Filter by group" style="display: none;"></div>
+  </div>
+</div>
+
+<main><div class="wrap" id="content"></div></main>
+
+<footer>
+  <div class="wrap">Values are typical figures for common hobby modules. Always check the datasheet or the printed labels on your own board, and confirm pin numbers against your wiring before uploading. Never connect mains voltage without proper insulation and, ideally, supervision from someone qualified.</div>
+</footer>
+
+<script>
+/* ================= DATA ================= */
+const CATS = [
+{
+  id:"arduino",
+  color:"var(--c-motion)",
+  title:"Arduino Programming Basics",
+  desc:"Learn the fundamental Arduino programming concepts used to read sensors, control actuators and build embedded systems.",
+  items:[
+
+    {
+      n:"Arduino Program Structure",
+      tag:"ARD1",
+      lv:"b",
+      d:"Every Arduino program has two main functions: setup() runs once when the board starts, while loop() runs repeatedly.",
+      specs:[
+        ["setup()","Runs once at startup"],
+        ["loop()","Runs repeatedly"],
+        ["Language","Arduino C/C++"]
+      ],
+      pins:[],
+      tips:[
+        "Use setup() for initialization such as pinMode() and Serial.begin().",
+        "Use loop() for the main program logic.",
+        "Both functions are required in a normal Arduino sketch."
+      ],
+      codes:[
+        {
+          label:"Basic Structure",
+          file:"arduino_structure.ino",
+          code:`void setup() {
+  // initialization code
+}
+
+void loop() {
+  // main code runs repeatedly
+}`
+        }
+      ]
+    },
+
+    {
+      n:"Comments",
+      tag:"ARD2",
+      lv:"b",
+      d:"Comments explain what the code does and are ignored by the compiler.",
+      specs:[
+        ["Single-line","// comment"],
+        ["Multi-line","/* comment */"]
+      ],
+      pins:[],
+      tips:[
+        "Use comments to explain important logic.",
+        "Avoid writing unnecessary comments for obvious code."
+      ],
+      codes:[
+        {
+          label:"Comments",
+          file:"comments.ino",
+          code:`// This is a single-line comment
+
+/*
+  This is a multi-line comment
+  used for explanation
+*/`
+        }
+      ]
+    },
+
+    {
+      n:"Variables & Data Types",
+      tag:"ARD3",
+      lv:"b",
+      d:"Variables store values that can be used and modified while the program is running.",
+      specs:[
+        ["int","Integer numbers"],
+        ["float","Decimal numbers"],
+        ["char","Single character"],
+        ["bool","true or false"]
+      ],
+      pins:[],
+      tips:[
+        "Choose a data type appropriate for the value being stored.",
+        "Variable names should clearly describe the stored value."
+      ],
+      codes:[
+        {
+          label:"Variables",
+          file:"variables.ino",
+          code:`int a = 10;
+float b = 3.14;
+char c = 'A';
+bool d = true;`
+        }
+      ]
+    },
+
+    {
+      n:"Constants",
+      tag:"ARD4",
+      lv:"b",
+      d:"Constants store fixed values that should not be changed during program execution.",
+      specs:[
+        ["Keyword","const"],
+        ["Example","const int ledPin = 13;"]
+      ],
+      pins:[],
+      tips:[
+        "Use constants for fixed pin numbers and configuration values.",
+        "Constants make programs easier to modify and understand."
+      ],
+      codes:[
+        {
+          label:"Constant",
+          file:"constants.ino",
+          code:`const int ledPin = 13;`
+        }
+      ]
+    },
+
+    {
+      n:"pinMode()",
+      tag:"ARD5",
+      lv:"b",
+      d:"pinMode() configures an Arduino pin as an INPUT, OUTPUT or another supported mode.",
+      specs:[
+        ["INPUT","Reads an external digital signal"],
+        ["OUTPUT","Controls a digital output"],
+        ["INPUT_PULLUP","Enables the internal pull-up resistor"]
+      ],
+      pins:[],
+      tips:[
+        "Configure a pin before using it as a digital input or output.",
+        "INPUT_PULLUP is useful for buttons and switches."
+      ],
+      codes:[
+        {
+          label:"Configure Pin",
+          file:"pinmode.ino",
+          code:`void setup() {
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+}`
+        }
+      ]
+    },
+
+    {
+      n:"digitalWrite()",
+      tag:"ARD6",
+      lv:"b",
+      d:"digitalWrite() sets a digital output pin to HIGH or LOW.",
+      specs:[
+        ["HIGH","Digital ON state"],
+        ["LOW","Digital OFF state"]
+      ],
+      pins:[],
+      tips:[
+        "The pin must normally be configured as OUTPUT first.",
+        "Use HIGH and LOW for digital control."
+      ],
+      codes:[
+        {
+          label:"Digital Output",
+          file:"digitalwrite.ino",
+          code:`digitalWrite(13, HIGH);
+digitalWrite(13, LOW);`
+        }
+      ]
+    },
+
+    {
+      n:"digitalRead()",
+      tag:"ARD7",
+      lv:"b",
+      d:"digitalRead() reads the current HIGH or LOW state of a digital input pin.",
+      specs:[
+        ["Return value","HIGH or LOW"],
+        ["Typical use","Buttons, switches and digital sensors"]
+      ],
+      pins:[],
+      tips:[
+        "Configure the pin as INPUT or INPUT_PULLUP.",
+        "Compare the returned value with HIGH or LOW."
+      ],
+      codes:[
+        {
+          label:"Read Digital Input",
+          file:"digitalread.ino",
+          code:`int value = digitalRead(2);`
+        }
+      ]
+    },
+
+    {
+      n:"analogRead()",
+      tag:"ARD8",
+      lv:"b",
+      d:"analogRead() measures an analog voltage using an Arduino analog input.",
+      specs:[
+        ["Arduino Uno range","0–1023"],
+        ["Typical pins","A0–A5"],
+        ["Typical use","LDR, LM35 and analog sensors"]
+      ],
+      pins:[],
+      tips:[
+        "Use analog pins such as A0 for analog sensors.",
+        "The returned value depends on the reference voltage."
+      ],
+      codes:[
+        {
+          label:"Read Analog Sensor",
+          file:"analogread.ino",
+          code:`int sensorValue = analogRead(A0);`
+        }
+      ]
+    },
+
+    {
+      n:"analogWrite()",
+      tag:"ARD9",
+      lv:"b",
+      d:"analogWrite() generates a PWM signal that can be used to control LED brightness or motor speed.",
+      specs:[
+        ["PWM range","0–255"],
+        ["Example","analogWrite(9, 128)"],
+        ["Typical use","LED brightness and motor control"]
+      ],
+      pins:[],
+      tips:[
+        "Use PWM-capable pins marked with ~ on compatible Arduino boards.",
+        "0 gives minimum duty cycle and 255 gives maximum duty cycle."
+      ],
+      codes:[
+        {
+          label:"PWM Output",
+          file:"analogwrite.ino",
+          code:`analogWrite(9, 128);`
+        }
+      ]
+    },
+
+    {
+      n:"delay()",
+      tag:"ARD10",
+      lv:"b",
+      d:"delay() pauses program execution for a specified number of milliseconds.",
+      specs:[
+        ["Unit","milliseconds"],
+        ["1000 ms","1 second"],
+        ["Example","delay(1000)"]
+      ],
+      pins:[],
+      tips:[
+        "delay() blocks normal execution while waiting.",
+        "Use it for simple timing in beginner programs."
+      ],
+      codes:[
+        {
+          label:"Delay",
+          file:"delay.ino",
+          code:`delay(1000);`
+        }
+      ]
+    },
+
+    {
+      n:"Logical Operators",
+      tag:"ARD11",
+      lv:"b",
+      d:"Logical operators combine or modify conditions used in decision-making.",
+      specs:[
+        ["&&","AND"],
+        ["||","OR"],
+        ["!","NOT"]
+      ],
+      pins:[],
+      tips:[
+        "Use && when all conditions must be true.",
+        "Use || when at least one condition must be true.",
+        "Use ! to reverse a condition."
+      ],
+      codes:[
+        {
+          label:"Logical Condition",
+          file:"logical_operators.ino",
+          code:`if (a > 10 && b < 20) {
+  // both conditions are true
+}`
+        }
+      ]
+    },
+
+    {
+      n:"if / else",
+      tag:"ARD12",
+      lv:"b",
+      d:"if / else executes different code depending on whether a condition is true or false.",
+      specs:[
+        ["if","Runs when condition is true"],
+        ["else","Runs when condition is false"]
+      ],
+      pins:[],
+      tips:[
+        "Use comparison operators such as >, <, == and !=.",
+        "if / else is one of the most common structures for sensor-based control."
+      ],
+      codes:[
+        {
+          label:"Condition",
+          file:"if_else.ino",
+          code:`if (value > 500) {
+  digitalWrite(13, HIGH);
+} else {
+  digitalWrite(13, LOW);
+}`
+        }
+      ]
+    },
+
+    {
+      n:"for Loop",
+      tag:"ARD13",
+      lv:"b",
+      d:"A for loop repeats a block of code a specified number of times.",
+      specs:[
+        ["Initialization","Runs before the loop"],
+        ["Condition","Controls whether the loop continues"],
+        ["Increment","Updates the loop variable"]
+      ],
+      pins:[],
+      tips:[
+        "Use for loops when the number of repetitions is known.",
+        "They are useful for repeated LED patterns and sensor processing."
+      ],
+      codes:[
+        {
+          label:"For Loop",
+          file:"for_loop.ino",
+          code:`for (int i = 0; i < 5; i++) {
+  digitalWrite(13, HIGH);
+  delay(500);
+}`
+        }
+      ]
+    },
+
+    {
+      n:"while Loop",
+      tag:"ARD14",
+      lv:"b",
+      d:"A while loop repeatedly executes code while a condition remains true.",
+      specs:[
+        ["Condition","Checked before each iteration"],
+        ["Use","Repeat until a condition becomes false"]
+      ],
+      pins:[],
+      tips:[
+        "Make sure the condition can eventually become false.",
+        "Otherwise, the program can remain inside the loop indefinitely."
+      ],
+      codes:[
+        {
+          label:"While Loop",
+          file:"while_loop.ino",
+          code:`while (digitalRead(2) == LOW) {
+  digitalWrite(13, HIGH);
+}`
+        }
+      ]
+    },
+
+    {
+      n:"User Defined Functions",
+      tag:"ARD15",
+      lv:"i",
+      d:"Functions allow you to group reusable instructions into a named block of code.",
+      specs:[
+        ["Return type","Defines what the function returns"],
+        ["Parameters","Optional input values"],
+        ["Example","void blinkLED(int pin)"]
+      ],
+      pins:[],
+      tips:[
+        "Functions make large Arduino programs easier to organize.",
+        "Use parameters when the same operation needs different inputs."
+      ],
+      codes:[
+        {
+          label:"Custom Function",
+          file:"user_function.ino",
+          code:`void blinkLED(int pin) {
+  digitalWrite(pin, HIGH);
+  delay(500);
+  digitalWrite(pin, LOW);
+}`
+        }
+      ]
+    },
+
+    {
+      n:"Serial Communication",
+      tag:"ARD16",
+      lv:"b",
+      d:"Serial communication allows the Arduino to send and receive data through a serial interface, commonly with a computer.",
+      specs:[
+        ["Common baud rate","9600"],
+        ["Output","Serial.print() / Serial.println()"],
+        ["Input","Serial.read()"]
+      ],
+      pins:[],
+      tips:[
+        "The baud rate in Serial.begin() should match the Serial Monitor.",
+        "Serial communication is very useful for debugging sensor values."
+      ],
+      codes:[
+        {
+          label:"Serial Output",
+          file:"serial_basic.ino",
+          code:`void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.println("Hello Arduino");
+}`
+        }
+      ]
+    },
+
+    {
+      n:"EEPROM",
+      tag:"ARD17",
+      lv:"i",
+      d:"EEPROM provides non-volatile memory that can retain stored data even after the Arduino loses power.",
+      specs:[
+        ["Library","#include <EEPROM.h>"],
+        ["Write","EEPROM.write()"],
+        ["Read","EEPROM.read()"]
+      ],
+      pins:[],
+      tips:[
+        "EEPROM is useful for storing settings and small amounts of persistent data.",
+        "Avoid unnecessary repeated writes because EEPROM has a limited write endurance."
+      ],
+      codes:[
+        {
+          label:"EEPROM",
+          file:"eeprom_basic.ino",
+          code:`#include <EEPROM.h>
+
+void setup() {
+  EEPROM.write(0, 100);
+
+  int value = EEPROM.read(0);
+}
+
+void loop() {
+}`
+        }
+      ]
+    },
+
+    {
+      n:"Basic LED Blink",
+      tag:"EX1",
+      lv:"b",
+      d:"A basic Arduino example that repeatedly turns an LED ON and OFF.",
+      specs:[
+        ["LED pin","13"],
+        ["ON time","1000 ms"],
+        ["OFF time","1000 ms"]
+      ],
+      pins:[
+        ["LED","D13 through resistor"],
+        ["LED GND","GND"]
+      ],
+      tips:[
+        "Use an external resistor when using an external LED.",
+        "The built-in LED on many Arduino boards can also be controlled using pin 13."
+      ],
+      codes:[
+        {
+          label:"LED Blink",
+          file:"basic_led_blink.ino",
+          code:`int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(ledPin, HIGH);
+  delay(1000);
+
+  digitalWrite(ledPin, LOW);
+  delay(1000);
+}`
+        }
+      ]
+    },
+
+    {
+      n:"LED ON using Digital Output",
+      tag:"EX2",
+      lv:"b",
+      d:"Turns an LED ON continuously using digitalWrite().",
+      specs:[
+        ["LED pin","13"],
+        ["Output","HIGH"]
+      ],
+      pins:[],
+      tips:[
+        "setup() runs once, so the LED remains HIGH after initialization.",
+        "The loop() can remain empty for this simple example."
+      ],
+      codes:[
+        {
+          label:"LED ON",
+          file:"led_on.ino",
+          code:`int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, HIGH);
+}
+
+void loop() {
+}`
+        }
+      ]
+    },
+
+    {
+      n:"Read Button State",
+      tag:"EX3",
+      lv:"b",
+      d:"Reads a push button using digitalRead() and the Arduino's internal pull-up resistor.",
+      specs:[
+        ["Button pin","D2"],
+        ["Mode","INPUT_PULLUP"],
+        ["Output","Serial Monitor"]
+      ],
+      pins:[
+        ["Button","D2"],
+        ["Other button terminal","GND"]
+      ],
+      tips:[
+        "With INPUT_PULLUP, the input is normally HIGH.",
+        "When the button connects the pin to GND, the reading becomes LOW."
+      ],
+      codes:[
+        {
+          label:"Read Button",
+          file:"button_read.ino",
+          code:`int buttonPin = 2;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int state = digitalRead(buttonPin);
+  Serial.println(state);
+  delay(500);
+}`
+        }
+      ]
+    },
+
+    {
+      n:"Button Controlled LED",
+      tag:"EX4",
+      lv:"b",
+      d:"Controls an LED based on the state of a push button using if / else.",
+      specs:[
+        ["LED","D13"],
+        ["Button","D2"],
+        ["Button mode","INPUT_PULLUP"]
+      ],
+      pins:[
+        ["LED","D13"],
+        ["Button","D2 to GND"]
+      ],
+      tips:[
+        "INPUT_PULLUP means a pressed button normally reads LOW.",
+        "Adjust the condition if your button uses external pull-up or pull-down wiring."
+      ],
+      codes:[
+        {
+          label:"Button + LED",
+          file:"button_led.ino",
+          code:`int ledPin = 13;
+int buttonPin = 2;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(buttonPin) == HIGH) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}`
+        }
+      ]
+    },
+
+    {
+      n:"LED Blink using for Loop",
+      tag:"EX5",
+      lv:"b",
+      d:"Blinks an LED five times using a for loop.",
+      specs:[
+        ["LED pin","13"],
+        ["Repetitions","5"],
+        ["Delay","500 ms"]
+      ],
+      pins:[],
+      tips:[
+        "The for loop controls the number of blink cycles.",
+        "After five cycles, loop() starts again and repeats the sequence."
+      ],
+      codes:[
+        {
+          label:"For Loop Blink",
+          file:"for_blink.ino",
+          code:`int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(ledPin, HIGH);
+    delay(500);
+
+    digitalWrite(ledPin, LOW);
+    delay(500);
+  }
+}`
+        }
+      ]
+    },
+
+    {
+      n:"Button Controlled LED Blink using Function",
+      tag:"EX6",
+      lv:"i",
+      d:"Uses a button, a user-defined function and a for loop to blink an LED five times when the button is pressed.",
+      specs:[
+        ["LED pin","8"],
+        ["Button pin","2"],
+        ["Blink count","5"],
+        ["Delay","500 ms"]
+      ],
+      pins:[
+        ["LED","D8"],
+        ["Button","D2 to GND"]
+      ],
+      tips:[
+        "The blink() function contains the reusable blinking logic.",
+        "The button uses INPUT_PULLUP, so a pressed button reads LOW.",
+        "The function is called whenever the button condition is satisfied."
+      ],
+      codes:[
+        {
+          label:"Function + Button",
+          file:"button_function_blink.ino",
+          code:`int ledPin = 8;
+int btn = 2;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(btn, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(btn) == LOW) {
+    blink();
+  }
+}
+
+void blink() {
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(ledPin, HIGH);
+    delay(500);
+
+    digitalWrite(ledPin, LOW);
+    delay(500);
+  }
+}`
+        }
+      ]
+    }
+
+  ]
+},
+{ id:"env", color:"var(--c-env)", title:"Environment sensors", desc:"Measure light, temperature, humidity, gas, water and fire.", items:[
+  { n:"LDR / Photoresistor", tag:"LDR1", lv:"b",
+    d:"A resistor whose value falls as light gets brighter. Use it in a divider to read light on an analog pin.",
+    specs:[["Supply","3.3–5 V"],["Output","analog via divider"],["Resistance","MΩ in dark, a few kΩ in bright light"]],
+    pins:[["LDR leg 1","5V"],["LDR leg 2 + 10 kΩ","A0 (other end of 10 kΩ to GND)"],["Output LED","D13"]],
+    tips:["With this wiring, brighter light gives a higher reading.","Change the threshold (500) to suit your room."],
+    codes:[{label:"Night light",file:"ldr_night_light.ino",code:`const int ldrPin = A0;
+const int ledPin = 13;
+const int threshold = 500;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(ldrPin);
+  int percent = map(value, 0, 1023, 0, 100);
+
+  if (value < threshold) {
+    digitalWrite(ledPin, HIGH);   // dark: light on
+  } else {
+    digitalWrite(ledPin, LOW);    // bright: light off
+  }
+
+  Serial.print("Light: ");
+  Serial.print(percent);
+  Serial.println(" %");
+  delay(200);
+}`}]},
+  { n:"DHT11 sensor", tag:"DHT1", lv:"b",
+    d:"A low-cost digital sensor for temperature and relative humidity on a single data wire.",
+    specs:[["Supply","3.3–5.5 V"],["Temperature","0–50 °C, ±2 °C"],["Humidity","20–80 %, ±5 %"],["Sample rate","max 1 read per second"]],
+    pins:[["VCC","5V"],["DATA","D2 (10 kΩ pull-up to VCC if bare sensor)"],["GND","GND"]],
+    tips:["Install \"DHT sensor library\" and \"Adafruit Unified Sensor\" from the Library Manager.","Wait at least 1–2 seconds between reads."],
+    codes:[{label:"Read temp and humidity",file:"dht11.ino",code:`#include <DHT.h>
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  delay(2000);
+
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();   // Celsius
+
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Failed to read from DHT11");
+    return;
+  }
+
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print(" %   Temperature: ");
+  Serial.print(t);
+  Serial.println(" C");
+}`}]},
+  { n:"LM35 temperature sensor", tag:"TMP1", lv:"b",
+    d:"An analog sensor that outputs 10 millivolts for every degree Celsius. No calibration needed.",
+    specs:[["Supply","4–30 V"],["Scale","10 mV per °C"],["Accuracy","about ±0.5 °C at room temperature"]],
+    pins:[["+Vs (left, flat side facing you)","5V"],["Vout (middle)","A0"],["GND (right)","GND"]],
+    tips:["Formula: temperature = voltage × 100.","The 1.1 V internal reference gives about five times finer resolution on an Uno.","Do not use the (V − 0.5) × 100 formula. That is for the TMP36."],
+    codes:[{label:"5 V reference",file:"lm35_basic.ino",code:`const int tempPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int raw = analogRead(tempPin);
+  float voltage = raw * 5.0 / 1023.0;
+  float tempC = voltage * 100.0;
+
+  Serial.print("Temperature: ");
+  Serial.print(tempC);
+  Serial.println(" C");
+  delay(1000);
+}`},{label:"1.1 V reference (finer)",file:"lm35_fine.ino",code:`const int tempPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+  analogReference(INTERNAL);   // 1.1 V on Uno/Nano
+}
+
+void loop() {
+  int raw = analogRead(tempPin);
+  float tempC = raw * 1.1 * 100.0 / 1023.0;
+
+  Serial.print("Temperature: ");
+  Serial.print(tempC);
+  Serial.println(" C");
+  delay(1000);
+}`}]},
+  { n:"MQ-x gas sensor", tag:"MQ1", lv:"i",
+    d:"A heated metal-oxide sensor whose resistance changes with gas concentration. MQ-2 senses smoke and LPG, MQ-3 alcohol, MQ-7 carbon monoxide, MQ-135 air quality.",
+    specs:[["Supply","5 V, heater draws about 150 mA"],["Outputs","AO analog, DO digital (adjustable)"],["Warm-up","20–60 s each time, longer on first use"]],
+    pins:[["VCC","5V"],["GND","GND"],["AO","A0"],["DO","D2 (optional alarm)"]],
+    tips:["The raw number is relative. For ppm you need calibration with a known gas.","The sensor gets hot. Keep it away from flammables and do not touch it.","Reading drifts with temperature and humidity."],
+    codes:[{label:"Gas alarm",file:"mq_gas_alarm.ino",code:`const int gasPin = A0;
+const int ledPin = 13;
+const int alarmLevel = 400;   // tune after testing in clean air
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+
+  Serial.println("Warming up sensor...");
+  delay(20000);                // 20 s minimum
+  Serial.println("Ready");
+}
+
+void loop() {
+  int gasValue = analogRead(gasPin);
+
+  Serial.print("Gas level: ");
+  Serial.println(gasValue);
+
+  if (gasValue > alarmLevel) {
+    digitalWrite(ledPin, HIGH);
+    Serial.println("WARNING: gas detected");
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(500);
+}`}]},
+  { n:"Soil moisture sensor", tag:"SOIL1", lv:"b",
+    d:"Measures how wet soil is. Resistive probes are cheap but corrode. Capacitive ones last much longer.",
+    specs:[["Supply","3.3–5 V"],["Output","analog, higher = drier (most modules)"]],
+    pins:[["VCC","5V"],["GND","GND"],["AO","A0"]],
+    tips:["Note the reading in dry air and in a glass of water. Use those two numbers to calibrate.","Power resistive probes only when reading to slow corrosion."],
+    codes:[{label:"Moisture percent",file:"soil_moisture.ino",code:`const int soilPin = A0;
+const int dryValue = 800;   // reading in dry air
+const int wetValue = 300;   // reading in water
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int raw = analogRead(soilPin);
+  int percent = map(raw, dryValue, wetValue, 0, 100);
+  percent = constrain(percent, 0, 100);
+
+  Serial.print("Raw: ");
+  Serial.print(raw);
+  Serial.print("   Moisture: ");
+  Serial.print(percent);
+  Serial.println(" %");
+
+  if (percent < 30) {
+    Serial.println("Soil is dry - water the plant");
+  }
+  delay(1000);
+}`}]},
+  { n:"Rain drop sensor", tag:"RAIN1", lv:"b",
+    d:"A printed plate that conducts when water bridges its tracks, plus a comparator board that gives analog and digital outputs.",
+    specs:[["Supply","3.3–5 V"],["AO","lower value = more water"],["DO","LOW when wet (threshold set by the pot)"]],
+    pins:[["VCC","5V"],["GND","GND"],["AO","A0"],["DO","D2"]],
+    tips:["Mount the plate at an angle so drops run off.","Values differ between boards. Print them and choose your own ranges."],
+    codes:[{label:"Rain level",file:"rain_sensor.ino",code:`const int rainAnalog = A0;
+const int rainDigital = 2;
+
+void setup() {
+  pinMode(rainDigital, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int level = analogRead(rainAnalog);
+
+  if (level > 800) {
+    Serial.println("Dry");
+  } else if (level > 500) {
+    Serial.println("Light rain");
+  } else {
+    Serial.println("Heavy rain");
+  }
+
+  if (digitalRead(rainDigital) == LOW) {
+    Serial.println("Digital: water detected");
+  }
+  delay(500);
+}`}]},
+  { n:"IR flame sensor", tag:"FLM1", lv:"i",
+    d:"Detects the infrared light given off by flames. A comparator gives a digital alarm, and the analog pin shows intensity.",
+    specs:[["Supply","3.3–5 V"],["Wavelength","about 760–1100 nm"],["Detection angle","about 60°"],["Range","up to roughly 1 m for a small flame"]],
+    pins:[["VCC","5V"],["GND","GND"],["DO","D2 (LOW = flame on most modules)"],["AO","A0"],["Buzzer","D8"]],
+    tips:["Sunlight and incandescent bulbs also emit IR and can cause false alarms.","Test with a small lighter flame at a safe distance.","This is a hobby detector, not a certified fire alarm."],
+    codes:[{label:"Flame alarm",file:"flame_sensor.ino",code:`const int flameDigital = 2;
+const int flameAnalog = A0;
+const int buzzer = 8;
+const int led = 13;
+
+void setup() {
+  pinMode(flameDigital, INPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(led, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int flame = digitalRead(flameDigital);
+  int level = analogRead(flameAnalog);
+
+  if (flame == LOW) {            // flame detected
+    digitalWrite(led, HIGH);
+    tone(buzzer, 1000);
+    Serial.print("FLAME! level = ");
+    Serial.println(level);
+  } else {
+    digitalWrite(led, LOW);
+    noTone(buzzer);
+  }
+  delay(100);
+}`}]}
+]},
+
+{ id:"out", color:"var(--c-out)", title:"Switching and motion", desc:"Turn bigger loads on and off, and move things to exact angles.", items:[
+  { n:"Relay module (5 V)", tag:"K1", lv:"i",
+    d:"An electrically controlled switch. A small Arduino signal switches a lamp, pump or fan on a separate circuit.",
+    specs:[["Coil","5 V"],["Contacts","typically 10 A at 250 VAC / 30 VDC"],["Input","most modules are active LOW"],["Isolation","optocoupler on most boards"]],
+    pins:[["VCC","5V"],["GND","GND"],["IN","D7"],["COM / NO / NC","load side: common, normally open, normally closed"]],
+    warn:"Switching mains voltage (110–240 V) can kill. Only do it with an enclosed, properly insulated setup and if you know what you are doing. Practise with a 5–12 V lamp or a small DC pump first.",
+    tips:["Active LOW means the relay turns ON when the pin is LOW.","Set the pin HIGH before switching it to OUTPUT so the relay does not click at start-up.","For DC motors and coils add a flyback diode across the load."],
+    codes:[{label:"Relay toggle",file:"relay_toggle.ino",code:`const int relayPin = 7;
+
+void setup() {
+  digitalWrite(relayPin, HIGH);   // HIGH = OFF for active-LOW modules
+  pinMode(relayPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.println("Relay ON");
+  digitalWrite(relayPin, LOW);
+  delay(3000);
+
+  Serial.println("Relay OFF");
+  digitalWrite(relayPin, HIGH);
+  delay(3000);
+}`}]},
+  { n:"SG90 servo motor", tag:"SV1", lv:"b",
+    d:"A tiny hobby servo that turns to any angle between 0 and about 180 degrees and holds it.",
+    specs:[["Supply","4.8–6 V"],["Speed","about 0.1 s per 60°"],["Torque","about 1.8 kg·cm"],["Pulse","about 500–2400 µs"]],
+    pins:[["Orange","signal to D9"],["Red","5V (external supply for heavy use)"],["Brown","GND"]],
+    tips:["If the servo jitters or the board resets, power it from a separate 5 V supply and join the grounds.","Do not force the horn by hand when powered. The gears strip easily."],
+    codes:[{label:"Sweep",file:"servo_sweep.ino",code:`#include <Servo.h>
+
+Servo sg90;
+
+void setup() {
+  sg90.attach(9);
+}
+
+void loop() {
+  for (int angle = 0; angle <= 180; angle += 2) {
+    sg90.write(angle);
+    delay(15);
+  }
+  for (int angle = 180; angle >= 0; angle -= 2) {
+    sg90.write(angle);
+    delay(15);
+  }
+}`},{label:"Knob control",file:"servo_knob.ino",code:`#include <Servo.h>
+
+Servo sg90;
+const int potPin = A0;
+
+void setup() {
+  sg90.attach(9);
+}
+
+void loop() {
+  int reading = analogRead(potPin);
+  int angle = map(reading, 0, 1023, 0, 180);
+  sg90.write(angle);
+  delay(15);
+}`}]}
+]},
+{ id:"motion", color:"var(--c-motion)", title:"Motion, distance and touch", desc:"Sense movement, obstacles, lines, touch and tilt.", items:[
+  { n:"HC-SR04 ultrasonic sensor", tag:"US1", lv:"b",
+    d:"Sends a burst of 40 kHz sound and times the echo to work out distance.",
+    specs:[["Supply","5 V"],["Range","about 2–400 cm"],["Beam angle","about 15°"],["Formula","distance (cm) = time (µs) / 58"]],
+    pins:[["VCC","5V"],["Trig","D9"],["Echo","D10"],["GND","GND"]],
+    tips:["Soft or angled surfaces reflect poorly and give bad readings.","The timeout in pulseIn() stops the sketch waiting forever when nothing is in range."],
+    codes:[{label:"Distance",file:"hcsr04.ino",code:`const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH, 30000);   // 30 ms timeout
+
+  if (duration == 0) {
+    Serial.println("No echo (out of range)");
+  } else {
+    float distance = duration / 58.0;
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+  }
+  delay(500);
+}`}]},
+  { n:"PIR motion sensor", tag:"PIR1", lv:"b",
+    d:"Detects changes in infrared heat, such as a person walking by, and outputs HIGH when it sees motion.",
+    specs:[["Supply","5–20 V (HC-SR501)"],["Output","3.3 V digital"],["Range","3–7 m, adjustable"],["Warm-up","about 30–60 s"]],
+    pins:[["VCC","5V"],["OUT","D7"],["GND","GND"],["LED","D13"]],
+    tips:["Two pots set sensitivity and hold time. Turn them fully anticlockwise for testing.","Keep it away from heaters, vents and direct sunlight."],
+    codes:[{label:"Motion alert",file:"pir_motion.ino",code:`const int pirPin = 7;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+
+  Serial.println("Calibrating PIR (30 s)...");
+  delay(30000);
+  Serial.println("Ready");
+}
+
+void loop() {
+  if (digitalRead(pirPin) == HIGH) {
+    digitalWrite(ledPin, HIGH);
+    Serial.println("Motion Detected!");
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(200);
+}`}]},
+  { n:"IR sensor module (obstacle)", tag:"IRM1", lv:"b",
+    d:"An infrared LED and receiver pair. It outputs LOW when something reflects the IR light back.",
+    specs:[["Supply","3.3–5 V"],["Range","about 2–30 cm, set by the pot"],["Output","digital, LOW = obstacle"]],
+    pins:[["VCC","5V"],["GND","GND"],["OUT","D2"]],
+    tips:["Dark or black objects reflect little IR and may not be seen.","Bright sunlight can saturate the receiver."],
+    codes:[{label:"Obstacle detect",file:"ir_obstacle.ino",code:`const int irPin = 2;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(irPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (digitalRead(irPin) == LOW) {
+    digitalWrite(ledPin, HIGH);
+    Serial.println("Obstacle detected");
+  } else {
+    digitalWrite(ledPin, LOW);
+    Serial.println("Clear");
+  }
+  delay(200);
+}`}]},
+  { n:"IR line-following sensor", tag:"LINE1", lv:"i",
+    d:"Two reflective IR sensors look down at the floor. White surfaces reflect and black tape absorbs, so the robot can tell where the line is.",
+    specs:[["Sensor","TCRT5000 type"],["Height","a few mm to about 2 cm above the surface"],["Output","digital per sensor"]],
+    pins:[["Left sensor OUT","D2"],["Right sensor OUT","D3"],["VCC / GND","5V / GND"]],
+    tips:["On most modules LOW = white surface, HIGH = black line. Check yours and swap the logic if needed.","Replace the Serial prints with motor driver commands when your robot is ready (see L298N in the earlier guide)."],
+    codes:[{label:"Line logic",file:"line_follower.ino",code:`const int leftSensor = 2;
+const int rightSensor = 3;
+
+void setup() {
+  pinMode(leftSensor, INPUT);
+  pinMode(rightSensor, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int left = digitalRead(leftSensor);     // HIGH = black line
+  int right = digitalRead(rightSensor);
+
+  if (left == LOW && right == LOW) {
+    Serial.println("Forward");             // line between sensors
+  } else if (left == HIGH && right == LOW) {
+    Serial.println("Turn left");
+  } else if (left == LOW && right == HIGH) {
+    Serial.println("Turn right");
+  } else {
+    Serial.println("Stop");                // both on black
+  }
+  delay(100);
+}`}]},
+  { n:"Touch sensor (TTP223)", tag:"TCH1", lv:"b",
+    d:"A capacitive touch pad that outputs HIGH while a finger touches it. It replaces a mechanical button.",
+    specs:[["Supply","2–5.5 V"],["Output","digital, HIGH when touched"],["Modes","solder jumpers select toggle or active-low"]],
+    pins:[["VCC","5V"],["I/O","D2"],["GND","GND"],["LED","D13"]],
+    tips:["Touch works through thin plastic or glass, handy for waterproof panels.","The code toggles the LED on each new touch."],
+    codes:[{label:"Touch toggle",file:"touch_toggle.ino",code:`const int touchPin = 2;
+const int ledPin = 13;
+
+bool ledOn = false;
+int lastState = LOW;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int state = digitalRead(touchPin);
+
+  if (state == HIGH && lastState == LOW) {   // new touch
+    ledOn = !ledOn;
+    digitalWrite(ledPin, ledOn);
+    delay(50);                                // small debounce
+  }
+  lastState = state;
+}`}]},
+  { n:"Accelerometer", tag:"ACC1", lv:"i",
+    d:"Measures acceleration on three axes, so it can sense tilt, shake and movement. ADXL335 is analog. MPU6050 is digital over I2C.",
+    specs:[["ADXL335","3.3 V, ±3 g, about 330 mV per g"],["MPU6050","3.3–5 V module, I2C 0x68, ±2 to ±16 g"],["At rest","Z axis reads about +1 g, X and Y near 0"]],
+    pins:[["ADXL335 X / Y / Z","A0 / A1 / A2"],["ADXL335 VCC","3.3V and AREF"],["MPU6050 SDA / SCL","A4 / A5 (Uno)"]],
+    warn:"For the ADXL335 sketch, wire the 3.3 V pin to AREF before uploading. Do not connect 5 V to AREF and do not call analogReference(EXTERNAL) unless AREF is fed by a source, or you can damage the chip.",
+    tips:["The MPU6050 sketch is the easier option if you already own that module."],
+    codes:[{label:"ADXL335 (analog)",file:"adxl335.ino",code:`const int xPin = A0;
+const int yPin = A1;
+const int zPin = A2;
+
+const float VREF = 3.3;          // AREF wired to 3.3V
+const float ZERO_G = VREF / 2;   // about 1.65 V
+const float SENS = 0.33;         // volts per g
+
+float readG(int pin) {
+  float v = analogRead(pin) * VREF / 1023.0;
+  return (v - ZERO_G) / SENS;
+}
+
+void setup() {
+  Serial.begin(9600);
+  analogReference(EXTERNAL);
+}
+
+void loop() {
+  Serial.print("X: ");
+  Serial.print(readG(xPin));
+  Serial.print(" g   Y: ");
+  Serial.print(readG(yPin));
+  Serial.print(" g   Z: ");
+  Serial.print(readG(zPin));
+  Serial.println(" g");
+  delay(200);
+}`},{label:"MPU6050 (I2C)",file:"mpu6050_accel.ino",code:`#include <Wire.h>
+
+const int MPU = 0x68;
+
+void setup() {
+  Serial.begin(9600);
+  Wire.begin();
+
+  Wire.beginTransmission(MPU);
+  Wire.write(0x6B);          // power management register
+  Wire.write(0);             // wake the sensor up
+  Wire.endTransmission(true);
+}
+
+void loop() {
+  Wire.beginTransmission(MPU);
+  Wire.write(0x3B);          // first accelerometer register
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU, 6, true);
+
+  int16_t ax = Wire.read() << 8 | Wire.read();
+  int16_t ay = Wire.read() << 8 | Wire.read();
+  int16_t az = Wire.read() << 8 | Wire.read();
+
+  Serial.print("AX: ");
+  Serial.print(ax / 16384.0);   // +/-2 g range
+  Serial.print(" g   AY: ");
+  Serial.print(ay / 16384.0);
+  Serial.print(" g   AZ: ");
+  Serial.print(az / 16384.0);
+  Serial.println(" g");
+  delay(200);
+}`}]}
+]},
+{ id:"wireless", color:"var(--c-wire)", title:"Wireless and tracking", desc:"Bluetooth, Zigbee, RFID, radio and GPS modules that talk to the outside world.", items:[
+  { n:"Bluetooth HC-05", tag:"BT1", lv:"i",
+    d:"A serial-to-Bluetooth bridge. Your phone connects to it and everything sent appears on the Arduino's serial pins.",
+    specs:[["Supply","3.6–6 V (on-board regulator)"],["Logic level","3.3 V on RXD"],["Data baud","9600 default"],["AT mode baud","38400"],["Pairing code","1234 or 0000"]],
+    pins:[["VCC","5V"],["GND","GND"],["TXD","D10 (Arduino RX)"],["RXD","D11 through a 1 kΩ / 2 kΩ divider"]],
+    tips:["Use a voltage divider from Arduino TX (D11) to HC-05 RXD to bring 5 V down to about 3.3 V.","Use a serial terminal app on your phone to send characters.","For AT mode, hold the small button while powering the module. A slowly blinking LED (about every 2 s) means AT mode."],
+    codes:[{label:"LED control",file:"hc05_led.ino",code:`#include <SoftwareSerial.h>
+
+SoftwareSerial bt(10, 11);   // RX, TX
+const int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+  bt.begin(9600);
+}
+
+void loop() {
+  if (bt.available()) {
+    char c = bt.read();
+    Serial.println(c);
+
+    if (c == '1') {
+      digitalWrite(ledPin, HIGH);
+    } else if (c == '0') {
+      digitalWrite(ledPin, LOW);
+    }
+  }
+}`},{label:"AT command mode",file:"hc05_at.ino",code:`#include <SoftwareSerial.h>
+
+SoftwareSerial bt(10, 11);   // RX, TX
+
+void setup() {
+  Serial.begin(9600);
+  bt.begin(38400);           // HC-05 AT mode speed
+  Serial.println("Type AT commands (Both NL & CR)");
+}
+
+void loop() {
+  if (bt.available()) {
+    Serial.write(bt.read());
+  }
+  if (Serial.available()) {
+    bt.write(Serial.read());
+  }
+}`}]},
+  { n:"Zigbee module (XBee)", tag:"ZB1", lv:"a",
+    d:"A low-power mesh radio. Two XBee modules set to the same network can pass serial data to each other without wires.",
+    specs:[["Supply","3.3 V (do not use 5 V)"],["Radio","2.4 GHz, IEEE 802.15.4 / Zigbee"],["Interface","UART: DOUT and DIN"],["Setup","use XCTU software to set PAN ID and roles"]],
+    pins:[["3.3V / GND","3.3V / GND"],["DOUT","D2 (Arduino RX)"],["DIN","D3 through a voltage divider"]],
+    tips:["Configure both modules in XCTU with the same PAN ID and baud rate. Make one Coordinator and the other a Router or End Device.","Use an XBee explorer board or shield so the module is powered and level-shifted correctly.","Use one sketch on each Arduino: transmitter and receiver."],
+    codes:[{label:"Transmitter",file:"xbee_tx.ino",code:`#include <SoftwareSerial.h>
+
+SoftwareSerial xbee(2, 3);   // RX, TX
+
+void setup() {
+  Serial.begin(9600);
+  xbee.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(A0);
+  xbee.println(value);       // sent wirelessly to the other XBee
+  Serial.print("Sent: ");
+  Serial.println(value);
+  delay(1000);
+}`},{label:"Receiver",file:"xbee_rx.ino",code:`#include <SoftwareSerial.h>
+
+SoftwareSerial xbee(2, 3);   // RX, TX
+
+void setup() {
+  Serial.begin(9600);
+  xbee.begin(9600);
+}
+
+void loop() {
+  if (xbee.available()) {
+    String text = xbee.readStringUntil('\\n');
+    Serial.print("Received: ");
+    Serial.println(text);
+  }
+}`}]},
+  { n:"RFID RC522 module", tag:"RFID1", lv:"i",
+    d:"Reads the unique ID of 13.56 MHz cards and key fobs over SPI. Common for door locks and attendance systems.",
+    specs:[["Supply","3.3 V only"],["Frequency","13.56 MHz"],["Cards","MIFARE Classic 1K, NTAG"],["Read range","about 3 cm"]],
+    pins:[["SDA (SS)","D10"],["SCK","D13"],["MOSI","D11"],["MISO","D12"],["RST","D9"],["3.3V / GND","3.3V / GND"],["IRQ","not connected"]],
+    tips:["Install the \"MFRC522\" library by GithubCommunity from the Library Manager.","Scan a card first, note its UID, then put it in the access-control sketch."],
+    warn:"Power the RC522 from 3.3 V. Feeding it 5 V can damage the module.",
+    codes:[{label:"Read UID",file:"rc522_uid.ino",code:`#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+  Serial.println("Scan a card...");
+}
+
+void loop() {
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  Serial.print("UID:");
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
+    Serial.print(rfid.uid.uidByte[i], HEX);
+  }
+  Serial.println();
+
+  rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+}`},{label:"Access control",file:"rc522_access.ino",code:`#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+
+byte allowedUID[4] = {0xDE, 0xAD, 0xBE, 0xEF};   // replace with your card's UID
+const int greenLed = 4;
+const int redLed = 5;
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+  pinMode(greenLed, OUTPUT);
+  pinMode(redLed, OUTPUT);
+}
+
+void loop() {
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  bool match = (rfid.uid.size == 4);
+  for (byte i = 0; i < 4 && match; i++) {
+    if (rfid.uid.uidByte[i] != allowedUID[i]) {
+      match = false;
+    }
+  }
+
+  if (match) {
+    Serial.println("Access granted");
+    digitalWrite(greenLed, HIGH);
+    delay(1500);
+    digitalWrite(greenLed, LOW);
+  } else {
+    Serial.println("Access denied");
+    digitalWrite(redLed, HIGH);
+    delay(1500);
+    digitalWrite(redLed, LOW);
+  }
+
+  rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+}`}]},
+  { n:"RF module (433 MHz)", tag:"RF1", lv:"i",
+    d:"A cheap one-way radio link. A transmitter sends short messages and a separate receiver picks them up.",
+    specs:[["Frequency","433 MHz"],["Transmitter supply","3–12 V"],["Receiver supply","5 V"],["Range","a few metres, more with a 17 cm wire antenna"]],
+    pins:[["TX module DATA","D12"],["RX module DATA","D11"],["VCC / GND","5V / GND on both"]],
+    tips:["Install the \"RadioHead\" library.","Solder a straight 17 cm wire to each antenna pad for far better range.","RadioHead uses Timer1, which conflicts with the Servo library on an Uno."],
+    codes:[{label:"Transmitter",file:"rf433_tx.ino",code:`#include <RH_ASK.h>
+#include <SPI.h>
+
+RH_ASK driver;   // TX on D12 by default
+
+void setup() {
+  Serial.begin(9600);
+  if (!driver.init()) {
+    Serial.println("RF init failed");
+  }
+}
+
+void loop() {
+  const char *msg = "Hello";
+  driver.send((uint8_t *)msg, strlen(msg));
+  driver.waitPacketSent();
+  Serial.println("Sent");
+  delay(1000);
+}`},{label:"Receiver",file:"rf433_rx.ino",code:`#include <RH_ASK.h>
+#include <SPI.h>
+
+RH_ASK driver;   // RX on D11 by default
+
+void setup() {
+  Serial.begin(9600);
+  if (!driver.init()) {
+    Serial.println("RF init failed");
+  }
+}
+
+void loop() {
+  uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
+  uint8_t buflen = sizeof(buf);
+
+  if (driver.recv(buf, &buflen)) {
+    Serial.print("Received: ");
+    for (uint8_t i = 0; i < buflen; i++) {
+      Serial.write(buf[i]);
+    }
+    Serial.println();
+  }
+}`}]},
+  { n:"GPS / GPRS module", tag:"GPS1", lv:"a",
+    d:"A GPS receiver (such as NEO-6M) gives position and time from satellites. A GPRS/GSM module (such as SIM800L) sends SMS and data over the mobile network.",
+    specs:[["NEO-6M","3.3–5 V, 9600 baud, 1 Hz updates"],["First fix","a few minutes outdoors with open sky"],["SIM800L","3.4–4.4 V, bursts up to 2 A, 2G only"]],
+    pins:[["GPS TX","D4 (Arduino RX)"],["GPS RX","D3 (Arduino TX)"],["SIM800L TX / RX","D7 / D8 (via level shifting on RX)"]],
+    warn:"The SIM800L needs its own power source that can supply about 2 A in bursts. Powering it from the Arduino 5 V pin makes it reset. Also check that your mobile carrier still supports 2G.",
+    tips:["Install \"TinyGPSPlus\" for the GPS sketch.","GPS will not work indoors. Test near a window or outside.","Use the SMS sketch with your own number and a SIM that has credit."],
+    codes:[{label:"GPS location",file:"gps_neo6m.ino",code:`#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+
+static const int RXPin = 4;     // GPS TX goes here
+static const int TXPin = 3;
+static const uint32_t GPSBaud = 9600;
+
+TinyGPSPlus gps;
+SoftwareSerial ss(RXPin, TXPin);
+
+void setup() {
+  Serial.begin(9600);
+  ss.begin(GPSBaud);
+  Serial.println("Waiting for GPS fix...");
+}
+
+void loop() {
+  while (ss.available() > 0) {
+    gps.encode(ss.read());
+  }
+
+  if (gps.location.isUpdated()) {
+    Serial.print("Lat: ");
+    Serial.print(gps.location.lat(), 6);
+    Serial.print("  Lng: ");
+    Serial.print(gps.location.lng(), 6);
+    Serial.print("  Satellites: ");
+    Serial.println(gps.satellites.value());
+  }
+}`},{label:"GPRS: send SMS",file:"sim800_sms.ino",code:`#include <SoftwareSerial.h>
+
+SoftwareSerial gsm(7, 8);   // RX, TX
+
+void sendSMS(const char *number, const char *text) {
+  gsm.println("AT+CMGF=1");             // text mode
+  delay(500);
+  gsm.print("AT+CMGS=\\"");
+  gsm.print(number);
+  gsm.println("\\"");
+  delay(500);
+  gsm.print(text);
+  delay(200);
+  gsm.write(26);                        // Ctrl+Z sends the message
+  delay(3000);
+}
+
+void setup() {
+  Serial.begin(9600);
+  gsm.begin(9600);
+  delay(3000);
+
+  gsm.println("AT");                    // should answer OK
+  delay(500);
+  sendSMS("+10000000000", "Hello from Arduino");
+}
+
+void loop() {
+  while (gsm.available()) {
+    Serial.write(gsm.read());           // show module replies
+  }
+}`}]}
+]},
+
+{ id:"bio", color:"var(--c-bio)", title:"Pulse and ECG sensors", desc:"Sense the body's signals. These are for learning and prototyping only.", items:[
+  { n:"Pulse rate / heart sensor", tag:"HR1", lv:"i",
+    d:"An optical sensor with an LED and light detector. Blood volume changes with each beat, which shows up as a rising and falling analog signal.",
+    specs:[["Supply","3–5 V"],["Output","analog waveform"],["Placement","fingertip or earlobe"]],
+    pins:[["S (signal)","A0"],["+ (middle)","5V or 3.3V"],["- ","GND"]],
+    warn:"Hobby pulse sensors are not medical devices. Do not use readings to diagnose or monitor a health condition.",
+    tips:["Press lightly and hold still. Pressing hard blocks blood flow and flattens the signal.","Use ambient-light shielding (black tape or a cover) to reduce noise.","For more robust results install the PulseSensor Playground library."],
+    codes:[{label:"Simple BPM",file:"pulse_bpm.ino",code:`const int pulsePin = A0;
+const int ledPin = 13;
+
+int threshold = 550;             // adjust for your signal
+bool above = false;
+unsigned long lastBeat = 0;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int signal = analogRead(pulsePin);
+
+  if (signal > threshold && !above) {         // rising edge = beat
+    above = true;
+    unsigned long now = millis();
+    unsigned long interval = now - lastBeat;
+
+    if (interval > 300 && interval < 2000) {  // 30 to 200 BPM
+      int bpm = 60000 / interval;
+      Serial.print("BPM: ");
+      Serial.println(bpm);
+    }
+    lastBeat = now;
+    digitalWrite(ledPin, HIGH);
+  }
+
+  if (signal < threshold - 20 && above) {
+    above = false;
+    digitalWrite(ledPin, LOW);
+  }
+  delay(5);                                   // about 200 samples per second
+}`},{label:"Plot raw signal",file:"pulse_plot.ino",code:`// Open Tools > Serial Plotter to see the waveform
+void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  Serial.println(analogRead(A0));
+  delay(10);
+}`}]},
+  { n:"ECG sensor (AD8232)", tag:"ECG1", lv:"a",
+    d:"A single-lead heart-rhythm front end. It amplifies and filters the tiny signal picked up by three electrode pads.",
+    specs:[["Supply","3.3 V"],["Output","analog, 0–3.3 V"],["Leads-off","LO+ and LO- go HIGH when a pad is loose"],["Electrodes","RA (right arm), LA (left arm), RL (right leg)"]],
+    pins:[["3.3V / GND","3.3V / GND"],["OUTPUT","A0"],["LO+","D10"],["LO-","D11"],["SDN","leave open (shutdown)"]],
+    warn:"Safety first: run this only from a battery. Never connect electrodes to your body while the board or your laptop is connected to mains-powered equipment without isolation. This is a learning tool and not a medical device.",
+    tips:["Use fresh gel electrodes and keep still and relaxed to reduce muscle noise.","Use Tools > Serial Plotter to see the waveform.","Keep leads away from mains cables to reduce 50/60 Hz noise."],
+    codes:[{label:"ECG plot",file:"ecg_ad8232.ino",code:`const int outputPin = A0;
+const int loPlus = 10;
+const int loMinus = 11;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(loPlus, INPUT);
+  pinMode(loMinus, INPUT);
+}
+
+void loop() {
+  if (digitalRead(loPlus) == HIGH || digitalRead(loMinus) == HIGH) {
+    Serial.println(0);            // leads off: flat line
+  } else {
+    Serial.println(analogRead(outputPin));
+  }
+  delay(4);                       // about 250 samples per second
+}`}]}
+]},
+];
+
+/* ================= HELPERS ================= */
+const LV = {b:"Beginner", i:"Intermediate", a:"Advanced"};
+const KW = new Set(["void","int","float","long","short","const","if","else","for","while","do","return","volatile","bool","boolean","byte","char","unsigned","static","true","false","String","uint8_t","uint16_t","uint32_t","int16_t","int8_t","size_t","break","continue","switch","case","word","double","class","public","private"]);
+const CONSTS = new Set(["HIGH","LOW","INPUT","OUTPUT","INPUT_PULLUP","LED_BUILTIN","HEX","DEC","CHANGE","RISING","FALLING","EXTERNAL","INTERNAL","DEFAULT","WL_CONNECTED","FILE_WRITE"]);
+
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function highlight(code, lang){
+  if (lang === "sh" || lang === "text"){
+    return code.split("\n").map(function(l){
+      var i = l.indexOf("#");
+      if (i === -1) return esc(l);
+      return esc(l.slice(0,i)) + '<span class="t-c">' + esc(l.slice(i)) + "</span>";
+    }).join("\n");
+  }
+  var re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(^[ \t]*#[^\n]*)|(\b0x[0-9a-fA-F]+\b|\b\d+\.?\d*\b)|([A-Za-z_]\w*)/gm;
+  var out = "", last = 0, m;
+  while ((m = re.exec(code)) !== null){
+    out += esc(code.slice(last, m.index));
+    var cls = "", t = m[0];
+    if (m[1]) cls = "t-c";
+    else if (m[2]) cls = "t-s";
+    else if (m[3]) cls = "t-p";
+    else if (m[4]) cls = "t-n";
+    else if (m[5]){
+      if (KW.has(t)) cls = "t-k";
+      else if (CONSTS.has(t) || /^A\d$/.test(t)) cls = "t-c2";
+      else { var rest = code.slice(re.lastIndex).match(/^\s*(.)/); if (rest && rest[1] === "(") cls = "t-f"; }
+    }
+    out += cls ? '<span class="' + cls + '">' + esc(t) + "</span>" : esc(t);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+
+function el(tag, cls, text){
+  var n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+
+function copyText(text, btn){
+  function done(){
+    var old = btn.textContent;
+    btn.textContent = "Copied";
+    btn.classList.add("done");
+    setTimeout(function(){ btn.textContent = old; btn.classList.remove("done"); }, 1500);
+  }
+  function fallback(){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+  else fallback();
+}
+
+/* ================= TOOLS ================= */
+function nextE12(r){
+  var base = [10,12,15,18,22,27,33,39,47,56,68,82];
+  var dec = Math.pow(10, Math.floor(Math.log10(r)) - 1);
+  for (var d = 0; d < 3; d++){
+    for (var i = 0; i < base.length; i++){
+      var v = base[i] * dec * Math.pow(10, d);
+      if (v >= r * 0.9999) return v;
+    }
+  }
+  return r;
+}
+function fmtOhm(v){
+  if (v >= 1e6) return +(v/1e6).toFixed(2) + " MΩ";
+  if (v >= 1e3) return +(v/1e3).toFixed(2) + " kΩ";
+  return +v.toFixed(2) + " Ω";
+}
+function field(label, input){
+  var l = el("label"); l.appendChild(document.createTextNode(label)); l.appendChild(input); return l;
+}
+function numInput(v, step){
+  var i = el("input"); i.type = "number"; i.value = v; i.step = step || "any"; i.min = "0"; return i;
+}
+
+function ledTool(){
+  var box = el("div","tool");
+  box.appendChild(el("h4",null,"LED resistor calculator"));
+  var vs = numInput(5), vf = numInput(2), ma = numInput(15);
+  var res = el("div","result");
+  function calc(){
+    var s = parseFloat(vs.value), f = parseFloat(vf.value), i = parseFloat(ma.value) / 1000;
+    if (!(s > f) || !(i > 0)){ res.textContent = "Supply must be higher than LED voltage"; return; }
+    var r = (s - f) / i, std = nextE12(r), actual = (s - f) / std * 1000;
+    res.textContent = "Use " + fmtOhm(std);
+    var sm = el("small", null, "Exact value " + fmtOhm(r) + ". With " + fmtOhm(std) + " the LED gets about " + actual.toFixed(1) + " mA.");
+    res.appendChild(sm);
+  }
+  [vs,vf,ma].forEach(function(x){ x.addEventListener("input", calc); });
+  box.appendChild(field("Supply (V)", vs));
+  box.appendChild(field("LED voltage (V)", vf));
+  box.appendChild(field("Current (mA)", ma));
+  box.appendChild(res);
+  calc();
+  return box;
+}
+
+function colorTool(){
+  var COLORS = [
+    {n:"Black",h:"#111",d:0,m:1},{n:"Brown",h:"#7b4a2a",d:1,m:10,t:1},{n:"Red",h:"#d32f2f",d:2,m:100,t:2},
+    {n:"Orange",h:"#f57c00",d:3,m:1e3},{n:"Yellow",h:"#fbc02d",d:4,m:1e4},{n:"Green",h:"#388e3c",d:5,m:1e5,t:0.5},
+    {n:"Blue",h:"#1976d2",d:6,m:1e6,t:0.25},{n:"Violet",h:"#7b1fa2",d:7,m:1e7,t:0.1},{n:"Grey",h:"#9e9e9e",d:8,m:1e8},
+    {n:"White",h:"#f5f5f5",d:9,m:1e9}
+  ];
+  var GOLD = {n:"Gold",h:"#c9a227",m:0.1,t:5}, SILVER = {n:"Silver",h:"#b0b0b0",m:0.01,t:10};
+  var box = el("div","tool");
+  box.appendChild(el("h4",null,"Resistor colour-band decoder (4 bands)"));
+
+  function sel(list, def){
+    var s = el("select");
+    list.forEach(function(c, i){ var o = el("option", null, c.n); o.value = i; s.appendChild(o); });
+    s.value = def; return s;
+  }
+  var b1 = sel(COLORS, 1), b2 = sel(COLORS, 0);
+  var mults = COLORS.concat([GOLD, SILVER]);
+  var b3 = sel(mults, 2);
+  var tols = COLORS.filter(function(c){ return c.t; }).concat([GOLD, SILVER]);
+  var b4 = sel(tols, tols.length - 2);
+
+  var svgNS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox","0 0 220 50"); svg.setAttribute("width","220"); svg.setAttribute("height","50");
+  svg.setAttribute("aria-hidden","true");
+  svg.innerHTML = '<line x1="0" y1="25" x2="220" y2="25" stroke="#889" stroke-width="3"/><rect x="30" y="8" width="160" height="34" rx="14" fill="#e8d9b5" stroke="#b9a77c"/>';
+  var bands = [];
+  [58,88,118,160].forEach(function(x){
+    var r = document.createElementNS(svgNS, "rect");
+    r.setAttribute("x", x); r.setAttribute("y", 8); r.setAttribute("width", 12); r.setAttribute("height", 34);
+    svg.appendChild(r); bands.push(r);
+  });
+
+  var res = el("div","result");
+  function calc(){
+    var c1 = COLORS[b1.value], c2 = COLORS[b2.value], c3 = mults[b3.value], c4 = tols[b4.value];
+    var val = (c1.d * 10 + c2.d) * c3.m;
+    res.textContent = fmtOhm(val) + " ±" + c4.t + "%";
+    [c1,c2,c3,c4].forEach(function(c, i){ bands[i].setAttribute("fill", c.h); });
+  }
+  [b1,b2,b3,b4].forEach(function(s){ s.addEventListener("change", calc); });
+  box.appendChild(svg);
+  box.appendChild(el("br"));
+  box.appendChild(field("Band 1", b1));
+  box.appendChild(field("Band 2", b2));
+  box.appendChild(field("Multiplier", b3));
+  box.appendChild(field("Tolerance", b4));
+  box.appendChild(res);
+  calc();
+  return box;
+}
+
+/* ================= CARD BUILD ================= */
+function buildCard(it){
+  var card = el("article","card");
+  card.id = slug(it.n);
+  var btn = el("button","card-btn");
+  btn.type = "button";
+  btn.setAttribute("aria-expanded","false");
+  btn.appendChild(el("span","tag",it.tag));
+  btn.appendChild(el("span","card-title",it.n));
+  btn.appendChild(el("span","card-sub",it.d));
+  var right = el("span","right");
+  right.appendChild(el("span","lv " + it.lv, LV[it.lv]));
+  right.appendChild(el("span","chev"));
+  btn.appendChild(right);
+  card.appendChild(btn);
+
+  var body = el("div","card-body");
+  var info = el("div","info");
+
+  info.appendChild(el("h4",null,"What it does"));
+  info.appendChild(el("p",null,it.d));
+
+  if (it.specs && it.specs.length){
+    info.appendChild(el("h4",null,"Key specs"));
+    var sp = el("div","specs");
+    it.specs.forEach(function(s){ var x = el("span","spec"); x.appendChild(el("b",null,s[0])); x.appendChild(document.createTextNode(s[1])); sp.appendChild(x); });
+    info.appendChild(sp);
+  }
+  if (it.pins && it.pins.length){
+    info.appendChild(el("h4",null,"Connections"));
+    var t = el("table","pins");
+    var thead = el("thead"), hr = el("tr");
+    hr.appendChild(el("th",null,"Part / step")); hr.appendChild(el("th",null,"Connect to / detail"));
+    thead.appendChild(hr); t.appendChild(thead);
+    var tb = el("tbody");
+    it.pins.forEach(function(p){ var r = el("tr"); r.appendChild(el("td",null,p[0])); r.appendChild(el("td",null,p[1])); tb.appendChild(r); });
+    t.appendChild(tb); info.appendChild(t);
+  }
+  if (it.warn){
+    var w = el("div","warn"); w.appendChild(el("b",null,"Warning: ")); w.appendChild(document.createTextNode(it.warn)); info.appendChild(w);
+  }
+  if (it.tips && it.tips.length){
+    info.appendChild(el("h4",null,"Tips"));
+    var ul = el("ul","tips");
+    it.tips.forEach(function(x){ ul.appendChild(el("li",null,x)); });
+    info.appendChild(ul);
+  }
+  if (it.tool === "led") info.appendChild(ledTool());
+  if (it.tool === "rcolor") info.appendChild(colorTool());
+  body.appendChild(info);
+
+  if (it.codes && it.codes.length){
+    var box = el("div","codebox");
+    var tabs = el("div","codetabs");
+    var bar = el("div","codebar");
+    var fileEl = el("span");
+    var copyBtn = el("button","copy","Copy code"); copyBtn.type = "button";
+    bar.appendChild(fileEl); bar.appendChild(copyBtn);
+    var pre = el("pre"), codeEl = el("code");
+    pre.appendChild(codeEl);
+    var current = 0, tabBtns = [];
+    function show(i){
+      current = i;
+      var c = it.codes[i];
+      fileEl.textContent = c.file;
+      codeEl.innerHTML = highlight(c.code, c.lang || "cpp");
+      tabBtns.forEach(function(b, j){ b.setAttribute("aria-selected", j === i ? "true" : "false"); });
+    }
+    if (it.codes.length > 1){
+      it.codes.forEach(function(c, i){
+        var b = el("button","codetab",c.label); b.type = "button"; b.setAttribute("role","tab");
+        b.addEventListener("click", function(){ show(i); });
+        tabs.appendChild(b); tabBtns.push(b);
+      });
+      box.appendChild(tabs);
+    } else {
+      var only = el("button","codetab",it.codes[0].label); only.type = "button"; only.disabled = true; only.setAttribute("aria-selected","true");
+      tabs.appendChild(only); tabBtns.push(only); box.appendChild(tabs);
+    }
+    copyBtn.addEventListener("click", function(){ copyText(it.codes[current].code, copyBtn); });
+    box.appendChild(bar); box.appendChild(pre);
+    show(0);
+    body.appendChild(box);
+  }
+  card.appendChild(body);
+
+  btn.addEventListener("click", function(){ setOpen(card, !card.classList.contains("open")); });
+  return card;
+}
+
+function setOpen(card, open){
+  card.classList.toggle("open", open);
+  card.querySelector(".card-btn").setAttribute("aria-expanded", open ? "true" : "false");
+}
+
+/* ================= PAGE ================= */
+var content = document.getElementById("content");
+var chipsEl = document.getElementById("chips");
+var searchEl = document.getElementById("search");
+var toggleAllBtn = document.getElementById("toggleAll");
+var activeCat = "all", query = "";
+
+var totalItems = 0, totalCode = 0;
+CATS.forEach(function(c){ totalItems += c.items.length; c.items.forEach(function(it){ totalCode += (it.codes||[]).length; }); });
+document.getElementById("statItems").textContent = totalItems;
+document.getElementById("statCats").textContent = CATS.length;
+document.getElementById("statCode").textContent = totalCode;
+
+function matches(it, q){
+  if (!q) return true;
+  var hay = [it.n, it.tag, it.d, (it.specs||[]).join(" "), (it.pins||[]).join(" "), (it.tips||[]).join(" "),
+    (it.codes||[]).map(function(c){ return c.code; }).join(" ")].join(" ").toLowerCase();
+  return hay.indexOf(q) !== -1;
+}
+
+function render(){
+  content.textContent = "";
+  var q = query.trim().toLowerCase(), shown = 0;
+  CATS.forEach(function(cat, idx){
+    if (activeCat !== "all" && activeCat !== cat.id) return;
+    var items = cat.items.filter(function(it){ return matches(it, q); });
+    if (!items.length) return;
+    var sec = el("section","cat"); sec.id = "cat-" + cat.id; sec.style.setProperty("--cc", cat.color);
+    var head = el("div","cat-head");
+    head.appendChild(el("span","cat-num", String(idx + 1)));
+    var tw = el("div");
+    tw.appendChild(el("h2",null,cat.title));
+    tw.appendChild(el("p",null,cat.desc));
+    head.appendChild(tw); sec.appendChild(head);
+    items.forEach(function(it){
+      var card = buildCard(it);
+      if (q) setOpen(card, true);
+      sec.appendChild(card); shown++;
+    });
+    content.appendChild(sec);
+  });
+  if (!shown) content.appendChild(el("p","empty","Nothing matches \"" + query + "\". Try a shorter word or choose All groups."));
+  toggleAllBtn.textContent = "Expand all";
+  if (location.hash){
+    var target = document.getElementById(location.hash.slice(1));
+    if (target && target.classList.contains("card")){ setOpen(target, true); }
+  }
+}
+
+function buildChips(){
+  function mk(id, label, count, color){
+    var b = el("button","chip"); b.type = "button"; b.dataset.id = id;
+    if (color){ var d = el("i"); d.style.setProperty("--dot", color); b.appendChild(d); }
+    b.appendChild(document.createTextNode(label + " "));
+    b.appendChild(el("small",null,String(count)));
+    chipsEl.appendChild(b);
+  }
+  mk("all","All groups", totalItems);
+  CATS.forEach(function(c, i){ mk(c.id, (i+1) + ". " + c.title, c.items.length, c.color); });
+  chipsEl.addEventListener("click", function(e){
+    var b = e.target.closest(".chip"); if (!b) return;
+    activeCat = b.dataset.id; syncChips(); render();
+    window.scrollTo({top:0});
+  });
+  syncChips();
+}
+function syncChips(){
+  Array.prototype.forEach.call(chipsEl.children, function(b){ b.setAttribute("aria-pressed", b.dataset.id === activeCat ? "true" : "false"); });
+}
+
+searchEl.addEventListener("input", function(){ query = searchEl.value; render(); });
+
+toggleAllBtn.addEventListener("click", function(){
+  var cards = content.querySelectorAll(".card");
+  var expand = toggleAllBtn.textContent === "Expand all";
+  cards.forEach(function(c){ setOpen(c, expand); });
+  toggleAllBtn.textContent = expand ? "Collapse all" : "Expand all";
+});
+
+buildChips();
+render();
+</script>
+</body>
+</html>
